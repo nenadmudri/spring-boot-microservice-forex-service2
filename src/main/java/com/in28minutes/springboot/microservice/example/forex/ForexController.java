@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -48,6 +49,7 @@ public class ForexController {
     return exchangeValue;
   }
   
+  @CrossOrigin(origins = "http://localhost:8002")
   @GetMapping("/currency-exchange/getList")
   public  List<ExchangeValue> retrieveExchangeList(){
     
@@ -69,7 +71,8 @@ public class ForexController {
 
 		Element table = doc.getElementById("index:srednjiKursLista");
 
-	    ArrayList<Integer> idValute = new ArrayList<>();	
+	    ArrayList<Integer> idValute = new ArrayList<>();
+	    ArrayList<String> imeDrzave = new ArrayList<>();
 		ArrayList<String> oznakaValute = new ArrayList<>();
 		ArrayList<Integer> vaziZa = new ArrayList<>();
 		ArrayList<Double> srednjiKurs = new ArrayList<>();
@@ -78,6 +81,7 @@ public class ForexController {
 		int size = table.select("tr").size();
 		for(int i=1; i<size; i++) {
 			idValute.add(Integer.parseInt(table.select("tr").get(i).select("td").get(0).text()));
+			imeDrzave.add(table.select("tr").get(i).select("td").get(1).text());
 			oznakaValute.add(table.select("tr").get(i).select("td").get(2).text());
 			vaziZa.add(Integer.parseInt(table.select("tr").get(i).select("td").get(3).text()));
 			srednjiKurs.add(Double.parseDouble(table.select("tr").get(i).select("td").get(4).text()));
@@ -91,7 +95,7 @@ public class ForexController {
 			int unit = vaziZa.get(i);
 		  //  BigDecimal bigD =  new BigDecimal(srednjiKurs.get(i)).setScale(4, BigDecimal.ROUND_HALF_UP);
 		    BigDecimal bigD =  new BigDecimal(srednjiKurs.get(i));
-		    ExchangeValue exchangeValue = new ExchangeValue(id ,oznakaValute.get(i),"RSD",unit,bigD);
+		    ExchangeValue exchangeValue = new ExchangeValue(id, imeDrzave.get(i), oznakaValute.get(i),"RSD",unit,bigD);
 		   System.out.println(bigD);
 		   System.out.println(exchangeValue.getConversionMultiple());
 		    repository.save(exchangeValue);

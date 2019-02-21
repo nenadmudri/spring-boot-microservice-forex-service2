@@ -12,6 +12,9 @@ public class ExchangeValue {
   @Id
   private Long id;
   
+  @Column(name="countryName")
+  private String countryName;
+  
   @Column(name="currency_from")
   private String from;
   
@@ -28,9 +31,10 @@ public class ExchangeValue {
   }
   
 
-  public ExchangeValue(Long id, String from, String to,int unit, BigDecimal conversionMultiple) {
+  public ExchangeValue(Long id, String countryName, String from, String to,int unit, BigDecimal conversionMultiple) {
     super();
     this.id = id;
+    this.countryName = countryName;
     this.from = from;
     this.to = to;
     this.unit = unit;
@@ -44,6 +48,10 @@ public class ExchangeValue {
   public String getFrom() {
     return from;
   }
+  
+  public String getCountryName() {
+	    return countryName;
+	  }
 
   public String getTo() {
     return to;
